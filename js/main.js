@@ -1,19 +1,53 @@
 import * as THREE from 'three';
 
 /* ======================
-   3D Hero Scene (Three.js)
+   3D Hero Scene (Three.js) with WebGL fallback
    ====================== */
 const heroCanvas = document.getElementById('heroCanvas');
 const canvasRect = heroCanvas.getBoundingClientRect();
 
-const scene = new THREE.Scene();
+// --- WebGL capability guard ---
+function hasWebGL() {
+  try {
+    const c = document.createElement('canvas');
+    return !!window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl'));
+  } catch (e) {
+    return false;
+  }
+}
 
-const camera = new THREE.PerspectiveCamera(45, canvasRect.width / canvasRect.height, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-renderer.setSize(canvasRect.width, canvasRect.height);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.domElement.style.display = 'block';
-heroCanvas.appendChild(renderer.domElement);
+if (!hasWebGL()) {
+  heroCanvas.style.display = 'none';
+  const fallback = document.createElement('div');
+  fallback.className = 'hero__fallback';
+  fallback.innerHTML = `
+    <div class="hero__content">
+      <p class="hero__kicker">AI · Jasa Waktu · Cepat</p>
+      <h1 class="hero__title">
+        Joki Tugas & Website<br />Cepat & Cerdas
+      </h1>
+      <p class="hero__subtitle">
+        Bantuan tugas akademik, pembuatan website profesional, dan solusi AI — semuanya dalam satu layanan.
+      </p>
+      <div class="hero__actions">
+        <a href="#services" class="btn btn--primary">Lihat Jasa <span aria-hidden="true">↓</span></a>
+        <a href="https://wa.me/6281234567890" class="btn btn--primary" target="_blank" rel="noopener">Chat WhatsApp</a>
+      </div>
+      <div class="hero__stats">
+        <div class="hero__stat"><span class="hero__stat-num">500+</span><span class="hero__stat-label">Tugas Selesai</span></div>
+        <div class="hero__stat"><span class="hero__stat-num">120+</span><span class="hero__stat-label">Website Lulus</span></div>
+      </div>
+    </div>`;
+  document.querySelector('.hero').prepend(fallback);
+} else {
+  const scene = new THREE.Scene();
+
+  const camera = new THREE.PerspectiveCamera(45, canvasRect.width / canvasRect.height, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(canvasRect.width, canvasRect.height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.domElement.style.display = 'block';
+  heroCanvas.appendChild(renderer.domElement);
 
 // --- Particle system ---
 const PARTICLE_COUNT = 2200;
@@ -177,6 +211,8 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(w, h);
 });
+
+} // end else (hasWebGL)
 
 /* ======================
    Scroll reveal + mobile menu
