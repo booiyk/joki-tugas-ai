@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 
 /* ======================
-   Apple-style 3D Scenes (Three.js) with WebGL fallback
+   3D Scenes (Three.js) dengan WebGL fallback
+   Tema gelap modern — aksen biru → violet → cyan
    ====================== */
 
 // --- WebGL capability guard ---
@@ -21,29 +22,33 @@ function prefersReducedMotion() {
 /* ======================
    Generic Scene Creator (reusable for hero, promo, about, portfolio)
    ====================== */
-function createScene(canvasId, fallbackId, contentSelector, options = {}) {
-  const canvas = document.getElementById(canvasId);
+function createScene(containerId, fallbackId, contentSelector, options = {}) {
+  const container = document.getElementById(containerId);
   const fallback = document.getElementById(fallbackId);
-  const content = canvas?.parentElement?.querySelector(contentSelector);
+  const content = container?.parentElement?.querySelector(contentSelector);
 
-  if (!canvas || !hasWebGL() || prefersReducedMotion()) {
-    if (canvas) canvas.style.display = 'none';
+  if (!container || !hasWebGL() || prefersReducedMotion()) {
+    if (container) container.style.display = 'none';
     if (fallback) fallback.classList.add('hero__fallback--visible', 'promo__fallback--visible');
     if (content) content.style.display = 'none';
     return null;
   }
 
-  const canvasRect = canvas.getBoundingClientRect();
+  const containerRect = container.getBoundingClientRect();
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(45, canvasRect.width / canvasRect.height, 0.1, 100);
+  const camera = new THREE.PerspectiveCamera(45, containerRect.width / containerRect.height, 0.1, 100);
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(canvasRect.width, canvasRect.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.domElement.style.display = 'block';
-  canvas.appendChild(renderer.domElement);
+  renderer.domElement.style.width = '100%';
+  renderer.domElement.style.height = '100%';
+  // FIX: renderer.domElement kini anak <div> container — sebelumnya
+  // ditempel ke <canvas>, yang anaknya tidak dirender browser.
+  container.appendChild(renderer.domElement);
 
-  // --- Particles (subtle, Apple-style) ---
+  // --- Particles (subtle) ---
   const PARTICLE_COUNT = options.particleCount || 400;
   const pos = new Float32Array(PARTICLE_COUNT * 3);
   const sizes = new Float32Array(PARTICLE_COUNT);
@@ -68,7 +73,7 @@ function createScene(canvasId, fallbackId, contentSelector, options = {}) {
 
   const particleMat = new THREE.PointsMaterial({
     size: 0.03,
-    color: options.particleColor || 0x0071e3,
+    color: options.particleColor || 0x3b82f6,
     transparent: true,
     opacity: 0.5,
     blending: THREE.AdditiveBlending,
@@ -100,7 +105,7 @@ function createScene(canvasId, fallbackId, contentSelector, options = {}) {
         64
       );
       const ringMat = new THREE.MeshBasicMaterial({
-        color: options.rings.color || 0x0071e3,
+        color: options.rings.color || 0x3b82f6,
         transparent: true,
         opacity: (options.rings.opacity || 0.08) - i * 0.02,
         side: THREE.DoubleSide,
@@ -119,7 +124,7 @@ function createScene(canvasId, fallbackId, contentSelector, options = {}) {
   const ambientSpheres = [];
   if (options.ambientSpheres) {
     const sphereMat = new THREE.MeshPhysicalMaterial({
-      color: options.ambientSpheres.color || 0x0a84ff,
+      color: options.ambientSpheres.color || 0x60a5fa,
       metalness: 0.1,
       roughness: 0.3,
       transparent: true,
@@ -204,13 +209,13 @@ function createScene(canvasId, fallbackId, contentSelector, options = {}) {
 
   animate();
 
-  // Mark canvas as ready for CSS transition
-  canvas.classList.add('hero__canvas--ready', 'hero__media-canvas--ready', 'promo__media-canvas--ready');
+  // Mark container as ready for CSS transition
+  container.classList.add('hero__canvas--ready', 'hero__media-canvas--ready', 'promo__media-canvas--ready');
 
   // --- Resize ---
   window.addEventListener('resize', () => {
-    const w = canvas.clientWidth;
-    const h = canvas.clientHeight;
+    const w = container.clientWidth;
+    const h = container.clientHeight;
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     renderer.setSize(w, h);
@@ -226,13 +231,13 @@ function initAllScenes() {
   // Hero
   createScene('heroCanvas', 'heroFallback', '.hero__content', {
     particleCount: 600,
-    particleColor: 0x0071e3,
+    particleColor: 0x3b82f6,
     radiusMin: 2,
     radiusMax: 6,
     centralElement: {
       geometry: new THREE.IcosahedronGeometry(0.8, 12),
       material: new THREE.MeshPhysicalMaterial({
-        color: 0x0071e3,
+        color: 0x3b82f6,
         metalness: 0.2,
         roughness: 0.1,
         clearcoat: 1,
@@ -243,21 +248,21 @@ function initAllScenes() {
       }),
       count: 1,
     },
-    rings: { count: 3, innerRadius: 1.5, thickness: 0.4, color: 0x0071e3, opacity: 0.08 },
-    ambientSpheres: { count: 8, color: 0x0a84ff },
+    rings: { count: 3, innerRadius: 1.5, thickness: 0.4, color: 0x3b82f6, opacity: 0.08 },
+    ambientSpheres: { count: 8, color: 0x60a5fa },
     cameraZ: 5.5,
   });
 
-  // Promo 1 (Joki Tugas) - blue theme; canvas kini visual Hero 1
+  // Promo 1 (Joki Tugas) - blue theme; container kini visual Hero 1
   createScene('promo1Canvas', null, '.hero__content', {
     particleCount: 300,
-    particleColor: 0x0071e3,
+    particleColor: 0x3b82f6,
     radiusMin: 1.5,
     radiusMax: 3,
     centralElement: {
       geometry: new THREE.BoxGeometry(1, 1, 1),
       material: new THREE.MeshPhysicalMaterial({
-        color: 0x0071e3,
+        color: 0x3b82f6,
         metalness: 0.15,
         roughness: 0.25,
         clearcoat: 0.5,
@@ -265,12 +270,12 @@ function initAllScenes() {
       }),
       count: 1,
     },
-    rings: { count: 2, innerRadius: 1.3, thickness: 0.3, color: 0x0071e3, opacity: 0.06 },
-    ambientSpheres: { count: 4, color: 0x0a84ff },
+    rings: { count: 2, innerRadius: 1.3, thickness: 0.3, color: 0x3b82f6, opacity: 0.06 },
+    ambientSpheres: { count: 4, color: 0x60a5fa },
     cameraZ: 4.5,
   });
 
-  // Promo 2 (Website) - purple theme; canvas kini visual Hero 2
+  // Promo 2 (Website) - purple theme; container kini visual Hero 2
   createScene('promo2Canvas', null, '.hero__content', {
     particleCount: 300,
     particleColor: 0x8b5cf6,
@@ -292,16 +297,16 @@ function initAllScenes() {
     cameraZ: 4.5,
   });
 
-  // Promo 3 (AI) - green theme; canvas kini visual Hero 3
+  // Promo 3 (AI) - cyan theme; container kini visual Hero 3
   createScene('promo3Canvas', null, '.hero__content', {
     particleCount: 300,
-    particleColor: 0x10b981,
+    particleColor: 0x38bdf8,
     radiusMin: 1.5,
     radiusMax: 3,
     centralElement: {
       geometry: new THREE.TorusGeometry(0.6, 0.2, 16, 32),
       material: new THREE.MeshPhysicalMaterial({
-        color: 0x10b981,
+        color: 0x38bdf8,
         metalness: 0.15,
         roughness: 0.25,
         clearcoat: 0.5,
@@ -309,17 +314,17 @@ function initAllScenes() {
       }),
       count: 1,
     },
-    rings: { count: 2, innerRadius: 1.3, thickness: 0.3, color: 0x10b981, opacity: 0.06 },
-    ambientSpheres: { count: 4, color: 0x34d399 },
+    rings: { count: 2, innerRadius: 1.3, thickness: 0.3, color: 0x38bdf8, opacity: 0.06 },
+    ambientSpheres: { count: 4, color: 0x7dd3fc },
     cameraZ: 4.5,
   });
 
   // Portfolio items (4 canvases)
   const portfolioConfigs = [
-    { id: 'portfolio1Canvas', color: 0x0071e3, geometry: new THREE.BoxGeometry(1, 1, 1) },
+    { id: 'portfolio1Canvas', color: 0x3b82f6, geometry: new THREE.BoxGeometry(1, 1, 1) },
     { id: 'portfolio2Canvas', color: 0x8b5cf6, geometry: new THREE.ConeGeometry(0.6, 1.2, 8) },
-    { id: 'portfolio3Canvas', color: 0x10b981, geometry: new THREE.CylinderGeometry(0.5, 0.5, 1, 16) },
-    { id: 'portfolio4Canvas', color: 0xf59e0b, geometry: new THREE.TorusGeometry(0.6, 0.2, 16, 32) },
+    { id: 'portfolio3Canvas', color: 0x38bdf8, geometry: new THREE.CylinderGeometry(0.5, 0.5, 1, 16) },
+    { id: 'portfolio4Canvas', color: 0x6366f1, geometry: new THREE.TorusGeometry(0.6, 0.2, 16, 32) },
   ];
 
   portfolioConfigs.forEach((cfg, i) => {

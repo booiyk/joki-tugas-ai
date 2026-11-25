@@ -12,7 +12,8 @@ joki-tugas-ai/
 ├── css/
 │   └── styles.css
 ├── js/
-│   └── main.js
+│   ├── main.js
+│   └── ui.js
 └── README.md
 ```
 
