@@ -3,190 +3,299 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Joki Tugas — Jasa Tugas &amp; Website Cepat</title>
+  <title>AI Joki Tugas — Jasa Tugas & Website Cepat</title>
   <meta name="description" content="Jasa pembuatan website, joki tugas, dan solusi AI untuk mahasiswa serta bisnis. Cepat, akurat, dan transparan." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <noscript>
     <style>
-      .hero__canvas { display: block; height: 100% !important; }
+      .hero__canvas { display: block; height: 100% !important; opacity: 1 !important; }
+      .hero__fallback { display: flex !important; }
     </style>
   </noscript>
 
-  <nav class="nav" id="nav">
+  <nav class="nav" id="nav" role="navigation" aria-label="Navigasi utama">
     <div class="nav__inner">
-      <a href="#home" class="nav__logo">✦ AI Joki</a>
+      <a href="#home" class="nav__logo" aria-label="AI Joki Tugas - Beranda">
+        <span class="nav__logo-mark" aria-hidden="true">AJ</span>
+        AI Joki Tugas
+      </a>
       <ul class="nav__links" id="navLinks">
         <li><a href="#home">Beranda</a></li>
         <li><a href="#services">Jasa</a></li>
-        <li><a href="#portofolio">Portofolio</a></li>
-        <li><a href="#testimoni">Testimoni</a></li>
-        <li><a href="#contact" class="nav__cta">Hubungi</a></li>
+        <li><a href="#portfolio">Portofolio</a></li>
+        <li><a href="#testimonials">Testimoni</a></li>
+        <li><a href="#contact" class="btn btn--primary nav__cta">Hubungi</a></li>
       </ul>
-      <button class="nav__burger" id="navBurger" aria-label="Buka menu" aria-expanded="false">
-        <span></span><span></span><span></span>
+      <button class="nav__burger" id="navBurger" aria-label="Buka menu" aria-expanded="false" aria-controls="navLinks">
+        <span aria-hidden="true"></span>
       </button>
     </div>
   </nav>
 
   <header class="hero" id="home">
-      <div class="hero__canvas" id="heroCanvas"></div>
-      <div class="hero__overlay"></div>
+    <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
+    <div class="hero__fallback" id="heroFallback" aria-hidden="true">
       <div class="hero__content">
-        <h1 class="hero__title">
-          Joki Tugas & Website<br />Cepat & Cerdas
-        </h1>
-        <p class="hero__subtitle">
-          Bantuan tugas akademik, pembuatan website profesional, dan solusi AI — semuanya dalam satu layanan.
-        </p>
+        <p class="hero__eyebrow">AI · Jasa Cepat · Terpercaya</p>
+        <h1 class="hero__title">Joki Tugas & Website<br />Cepat & Cerdas</h1>
+        <p class="hero__subtitle">Bantuan tugas akademik, pembuatan website profesional, dan solusi AI — semuanya dalam satu layanan.</p>
         <div class="hero__actions">
-          <a href="#services" class="btn btn--primary">Lihat Jasa <span aria-hidden="true">↓</span></a>
-          <a href="https://wa.me/6281234567890" class="btn btn--ghost" target="_blank" rel="noopener">Chat WhatsApp</a>
+          <a href="#services" class="btn btn--primary btn--large">Lihat Jasa</a>
+          <a href="https://wa.me/6281234567890" class="btn btn--secondary btn--large" target="_blank" rel="noopener">Chat WhatsApp</a>
         </div>
         <div class="hero__stats">
           <div class="hero__stat">
-            <span class="hero__stat-num">500+</span>
+            <span class="hero__stat-value">500+</span>
             <span class="hero__stat-label">Tugas Selesai</span>
           </div>
           <div class="hero__stat">
-            <span class="hero__stat-num">120+</span>
+            <span class="hero__stat-value">120+</span>
             <span class="hero__stat-label">Website Lulus</span>
           </div>
         </div>
       </div>
-    </header>
-
-  <section class="services" id="services">
-    <div class="container">
-      <div class="section-head">
-        <h2 class="section-title">Layanan Kami</h2>
-        <p class="section-desc">Semua kebutuhan digital Anda dalam satu layanan yang terpercaya.</p>
+    </div>
+    <div class="hero__content">
+      <p class="hero__eyebrow">AI · Jasa Cepat · Terpercaya</p>
+      <h1 class="hero__title">Joki Tugas & Website<br />Cepat & Cerdas</h1>
+      <p class="hero__subtitle">Bantuan tugas akademik, pembuatan website profesional, dan solusi AI — semuanya dalam satu layanan.</p>
+      <div class="hero__actions">
+        <a href="#services" class="btn btn--primary btn--large">Lihat Jasa</a>
+        <a href="https://wa.me/6281234567890" class="btn btn--secondary btn--large" target="_blank" rel="noopener">Chat WhatsApp</a>
       </div>
+      <div class="hero__stats">
+        <div class="hero__stat">
+          <span class="hero__stat-value">500+</span>
+          <span class="hero__stat-label">Tugas Selesai</span>
+        </div>
+        <div class="hero__stat">
+          <span class="hero__stat-value">120+</span>
+          <span class="hero__stat-label">Website Lulus</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section" id="services" aria-labelledby="services-title">
+    <div class="container">
+      <header class="section__header">
+        <h2 class="section__title" id="services-title">Layanan Kami</h2>
+        <p class="section__description">Tiga layanan utama untuk mendukung kebutuhan digital Anda — dari akademik hingga bisnis.</p>
+      </header>
       <div class="services__grid">
-        <article class="card reveal">
-          <div class="card__icon" aria-hidden="true">🧠</div>
-          <h3 class="card__title">Jasa Joki Tugas</h3>
-          <p class="card__desc">Bantuan tugas akademik—matematika, pemrograman, bahasa, fisika, sampai administrasi. Jawaban orisinal, dampak plagiarisme.</p>
-          <a href="#contact" class="card__link">Lebih lanjut <span aria-hidden="true">→</span></a>
+        <article class="service-card reveal">
+          <div class="service-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          </div>
+          <h3 class="service-card__title">Jasa Joki Tugas</h3>
+          <p class="service-card__description">Bantuan tugas akademik — matematika, pemrograman, bahasa, fisika, hingga administrasi. Jawaban original, bebas plagiarisme.</p>
+          <a href="#contact" class="service-card__link">Pelajari lebih lanjut <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
         </article>
-        <article class="card reveal">
-          <div class="card__icon" aria-hidden="true">💻</div>
-          <h3 class="card__title">Pembuatan Website</h3>
-          <p class="card__desc">Website bisnis, portofolio, atau e-commerce yang responsif, cepat, dan dioptimalkan untuk SEO. Siap tampil 24/7.</p>
-          <a href="#contact" class="card__link">Lebih lanjut <span aria-hidden="true">→</span></a>
+        <article class="service-card reveal">
+          <div class="service-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+          </div>
+          <h3 class="service-card__title">Pembuatan Website</h3>
+          <p class="service-card__description">Website bisnis, portofolio, atau e-commerce yang responsif, cepat, dan dioptimalkan SEO. Siap tampil 24/7.</p>
+          <a href="#contact" class="service-card__link">Pelajari lebih lanjut <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
         </article>
-        <article class="card reveal">
-          <div class="card__icon" aria-hidden="true">🤖</div>
-          <h3 class="card__title">Solusi AI</h3>
-          <p class="card__desc">Chatbot, otomatisasi tugas, generator konten, dan integrasi AI yang siap pakai—dilengkapi manual dukungannya.</p>
-          <a href="#contact" class="card__link">Lebih lanjut <span aria-hidden="true">→</span></a>
+        <article class="service-card reveal">
+          <div class="service-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><path d="M9 9h6"/><path d="M9 13h4"/></svg>
+          </div>
+          <h3 class="service-card__title">Solusi AI</h3>
+          <p class="service-card__description">Chatbot, otomatisasi tugas, generator konten, dan integrasi AI siap pakai — dilengkapi panduan penggunaannya.</p>
+          <a href="#contact" class="service-card__link">Pelajari lebih lanjut <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
         </article>
       </div>
     </div>
   </section>
 
-  <section class="about">
+  <section class="section section--alt" id="about" aria-labelledby="about-title">
     <div class="container">
       <div class="about__grid">
         <div class="about__visual">
-          <div class="about__visual-inner">
-            <span class="about__visual-ill" aria-hidden="true">✦</span>
-          </div>
+          <canvas class="about__visual-canvas" id="aboutCanvas" aria-hidden="true"></canvas>
         </div>
         <div class="about__text">
-                  <h2 class="section-title">Siapa Kita</h2>
-                  <p class="about__desc">Tim kecil, praktisi besar. Mulai dari mahasiswa yang butuh bantuan tugas hingga startup yang butuh website, kami hadir dengan hasil andal dan deadline terpenuhi.</p>
-                  <ul class="about__list">
-                    <li>✅ 100% original — tidak plagiat</li>
-                    <li>✅ Pengiriman dini, bermutu</li>
-                    <li>✅ Harga transparan & fleksibel</li>
-                    <li>✅ Support 7 hari × 24 jam</li>
-                  </ul>
-                </div>
+          <header class="section__header">
+            <h2 class="section__title" id="about-title">Siapa Kita</h2>
+            <p class="section__description">Tim kecil, praktisi besar. Kami hadir dengan hasil andal dan deadline terpenuhi.</p>
+          </header>
+          <p class="about__description">Mulai dari mahasiswa yang butuh bantuan tugas hingga startup yang butuh website, kami mengerti tekanan deadline dan standar kualitas. Setiap proyek dikerjakan dengan standar profesional — bukan sekadar "diselesaikan".</p>
+          <div class="about__features">
+            <div class="about__feature">
+              <div class="about__feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span class="about__feature-text">100% original — tidak plagiarisme</span>
+            </div>
+            <div class="about__feature">
+              <div class="about__feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span class="about__feature-text">Pengiriman tepat waktu, bermutu</span>
+            </div>
+            <div class="about__feature">
+              <div class="about__feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span class="about__feature-text">Harga transparan & fleksibel</span>
+            </div>
+            <div class="about__feature">
+              <div class="about__feature-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span class="about__feature-text">Dukungan 7 hari × 24 jam</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="portofolio" id="portofolio">
+  <section class="section" id="portfolio" aria-labelledby="portfolio-title">
     <div class="container">
-      <div class="section-head">
-        <h2 class="section-title">Portofolio Karya</h2>
-        <p class="section-desc">Beberapa hasil kerja yang sudah kami selesaikan.</p>
-      </div>
-      <div class="porto__grid">
-        <div class="porto__item">
-          <div class="porto__img" aria-hidden="true">🪐</div>
-          <div class="porto__cap">Website Portofolio Bisnis</div>
-        </div>
-        <div class="porto__item">
-          <div class="porto__img" aria-hidden="true">📊</div>
-          <div class="porto__cap">Dashboard Data Olahraga</div>
-        </div>
-        <div class="porto__item">
-          <div class="porto__img" aria-hidden="true">📝</div>
-          <div class="porto__cap">Buku Tugas Mahasiswa Digital</div>
-        </div>
-        <div class="porto__item">
-          <div class="porto__img" aria-hidden="true">🤖</div>
-          <div class="porto__cap">Chatbot AI Customer Service</div>
-        </div>
+      <header class="section__header">
+        <h2 class="section__title" id="portfolio-title">Portofolio Karya</h2>
+        <p class="section__description">Beberapa hasil kerja yang sudah kami selesaikan untuk berbagai klien.</p>
+      </header>
+      <div class="portfolio__grid">
+        <article class="portfolio-item reveal">
+          <div class="portfolio-item__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <h3 class="portfolio-item__title">Website Portofolio Bisnis</h3>
+        </article>
+        <article class="portfolio-item reveal">
+          <div class="portfolio-item__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+          </div>
+          <h3 class="portfolio-item__title">Dashboard Data Olahraga</h3>
+        </article>
+        <article class="portfolio-item reveal">
+          <div class="portfolio-item__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <h3 class="portfolio-item__title">Buku Tugas Mahasiswa Digital</h3>
+        </article>
+        <article class="portfolio-item reveal">
+          <div class="portfolio-item__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          </div>
+          <h3 class="portfolio-item__title">Chatbot AI Customer Service</h3>
+        </article>
       </div>
     </div>
   </section>
 
-  <section class="testimoni" id="testimoni">
+  <section class="section section--alt" id="testimonials" aria-labelledby="testimonials-title">
     <div class="container">
-      <div class="section-head">
-        <h2 class="section-title">Apa Kata Mereka</h2>
-      </div>
-      <div class="testi__grid">
-        <figure class="testi__card reveal">
-          <div class="testi__stars" aria-label="5 bintang">★★★★★</div>
-          <blockquote class="testi__quote">&ldquo;Bantuan joki tugasnya rapi dan tepat waktu. Akhirnya saya bisa fokus ke ujian.&rdquo;</blockquote>
-          <figcaption>&mdash; Rina S., Mahasiswa</figcaption>
+      <header class="section__header">
+        <h2 class="section__title" id="testimonials-title">Apa Kata Mereka</h2>
+        <p class="section__description">Pengalaman nyata dari klien yang telah mempercayakan proyek mereka kepada kami.</p>
+      </header>
+      <div class="testimonials__grid">
+        <figure class="testimonial-card reveal">
+          <div class="testimonial-card__stars" aria-label="5 bintang">
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <blockquote class="testimonial-card__quote">"Bantuan joki tugasnya rapi dan tepat waktu. Akhirnya saya bisa fokus ke ujian."</blockquote>
+          <figcaption class="testimonial-card__author">
+            <div class="testimonial-card__avatar" aria-hidden="true">RS</div>
+            <div>
+              <div class="testimonial-card__name">Rina S.</div>
+              <div class="testimonial-card__role">Mahasiswa</div>
+            </div>
+          </figcaption>
         </figure>
-        <figure class="testi__card reveal">
-          <div class="testi__stars" aria-label="5 bintang">★★★★★</div>
-          <blockquote class="testi__quote">&ldquo;Website klien jadi profesional, dan deadline nya jauh lebih awal. Lingkungan yang profesional.&rdquo;</blockquote>
-          <figcaption>&mdash; Dimas A., UMKM Panggang</figcaption>
+        <figure class="testimonial-card reveal">
+          <div class="testimonial-card__stars" aria-label="5 bintang">
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <blockquote class="testimonial-card__quote">"Website klien jadi profesional, dan deadline-nya jauh lebih awal. Lingkungan yang profesional."</blockquote>
+          <figcaption class="testimonial-card__author">
+            <div class="testimonial-card__avatar" aria-hidden="true">DA</div>
+            <div>
+              <div class="testimonial-card__name">Dimas A.</div>
+              <div class="testimonial-card__role">UMKM Panggang</div>
+            </div>
+          </figcaption>
         </figure>
-        <figure class="testi__card reveal">
-          <div class="testi__stars" aria-label="5 bintang">★★★★★</div>
-          <blockquote class="testi__quote">&ldquo;Solusi AI yang dibangun sesuai kebutuhan, tidak over-supply. Rekomendasi.&rdquo;</blockquote>
-          <figcaption>&mdash; Ahmad P., Remote Navigator</figcaption>
+        <figure class="testimonial-card reveal">
+          <div class="testimonial-card__stars" aria-label="5 bintang">
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <blockquote class="testimonial-card__quote">"Solusi AI yang dibangun sesuai kebutuhan, tidak over-supply. Rekomendasi."</blockquote>
+          <figcaption class="testimonial-card__author">
+            <div class="testimonial-card__avatar" aria-hidden="true">AP</div>
+            <div>
+              <div class="testimonial-card__name">Ahmad P.</div>
+              <div class="testimonial-card__role">Remote Navigator</div>
+            </div>
+          </figcaption>
         </figure>
       </div>
     </div>
   </section>
 
-  <section class="contact" id="contact">
+  <section class="section contact" id="contact" aria-labelledby="contact-title">
     <div class="container">
       <div class="contact__card">
-        <h2 class="contact__title">Mari Kolaborasi</h2>
-        <p class="contact__desc">Tugas, website, atau solusi AI? Kirim tahu kebutuhan kamu sekarang.</p>
-        <a href="https://wa.me/6281234567890" class="btn btn--whatsapp" target="_blank" rel="noopener">
-          <span aria-hidden="true">💬</span> Chat di WhatsApp
-        </a>
-        <div class="contact__meta">
-          <div><span aria-hidden="true">📍</span> Jakarta, Indonesia</div>
-          <div><span aria-hidden="true">✉️</span> hello@aijoki.example</div>
+        <header>
+          <h2 class="contact__title" id="contact-title">Mari Kolaborasi</h2>
+          <p class="contact__description">Tugas, website, atau solusi AI? Kirim tahu kebutuhan Anda sekarang.</p>
+        </header>
+        <div class="contact__actions">
+          <a href="https://wa.me/6281234567890" class="btn btn--primary btn--large" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            Chat di WhatsApp
+          </a>
+          <a href="#services" class="btn btn--secondary btn--large">Lihat Layanan</a>
+        </div>
+        <div class="contact__info">
+          <div class="contact__info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Jakarta, Indonesia
+          </div>
+          <div class="contact__info-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+            hello@aijoki.example
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <footer>
-    <div class="container footer__inner">
-      <span class="footer__brand">✦ AI Joki</span>
-      <span class="footer__copy">&copy; 2026 AI Joki &mdash; Jasa Tugas &amp; Web Cepat.</span>
-      <div class="footer__links">
-        <a href="#">Kebijakan</a>
-        <a href="#">Privasi</a>
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__brand">
+          <span class="footer__brand-mark" aria-hidden="true">AJ</span>
+          AI Joki Tugas
+        </div>
+        <p class="footer__copyright">&copy; 2026 AI Joki Tugas — Jasa Tugas & Web Cepat.</p>
+        <nav class="footer__links" aria-label="Tautan legal">
+          <a href="#">Kebijakan</a>
+          <a href="#">Privasi</a>
+        </nav>
       </div>
     </div>
   </footer>
