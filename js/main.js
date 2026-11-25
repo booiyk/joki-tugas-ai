@@ -19,40 +19,39 @@ function prefersReducedMotion() {
 }
 
 /* ======================
-   Hero Scene
+   Generic Scene Creator (reusable for hero, promo, about, portfolio)
    ====================== */
-function initHeroScene() {
-  const heroCanvas = document.getElementById('heroCanvas');
-  const heroFallback = document.getElementById('heroFallback');
-  const heroContent = heroCanvas.parentElement.querySelector('.hero__content');
+function createScene(canvasId, fallbackId, contentSelector, options = {}) {
+  const canvas = document.getElementById(canvasId);
+  const fallback = document.getElementById(fallbackId);
+  const content = canvas?.parentElement?.querySelector(contentSelector);
 
-  if (!hasWebGL() || prefersReducedMotion()) {
-    heroCanvas.style.display = 'none';
-    if (heroFallback) heroFallback.classList.add('hero__fallback--visible');
-    if (heroContent) heroContent.style.display = 'none';
-    return;
+  if (!canvas || !hasWebGL() || prefersReducedMotion()) {
+    if (canvas) canvas.style.display = 'none';
+    if (fallback) fallback.classList.add('hero__fallback--visible', 'promo__fallback--visible');
+    if (content) content.style.display = 'none';
+    return null;
   }
 
-  const canvasRect = heroCanvas.getBoundingClientRect();
+  const canvasRect = canvas.getBoundingClientRect();
 
   const scene = new THREE.Scene();
-
   const camera = new THREE.PerspectiveCamera(45, canvasRect.width / canvasRect.height, 0.1, 100);
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setSize(canvasRect.width, canvasRect.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.domElement.style.display = 'block';
-  heroCanvas.appendChild(renderer.domElement);
+  canvas.appendChild(renderer.domElement);
 
-  // --- Subtle particle field (Apple-style: fewer, refined) ---
-  const PARTICLE_COUNT = 600;
+  // --- Particles (subtle, Apple-style) ---
+  const PARTICLE_COUNT = options.particleCount || 400;
   const pos = new Float32Array(PARTICLE_COUNT * 3);
   const sizes = new Float32Array(PARTICLE_COUNT);
   const speeds = new Float32Array(PARTICLE_COUNT);
   const phases = new Float32Array(PARTICLE_COUNT);
 
   for (let i = 0; i < PARTICLE_COUNT; i++) {
-    const radius = 2 + Math.random() * 6;
+    const radius = (options.radiusMin || 1.5) + Math.random() * (options.radiusMax || 4);
     const theta = Math.random() * Math.PI * 2;
     const phi = Math.acos(2 * Math.random() - 1);
     pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
@@ -69,9 +68,9 @@ function initHeroScene() {
 
   const particleMat = new THREE.PointsMaterial({
     size: 0.03,
-    color: 0x0071e3,
+    color: options.particleColor || 0x0071e3,
     transparent: true,
-    opacity: 0.6,
+    opacity: 0.5,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
     sizeAttenuation: true,
@@ -79,60 +78,68 @@ function initHeroScene() {
   const particles = new THREE.Points(particleGeo, particleMat);
   scene.add(particles);
 
-  // --- Central floating orb (Apple-style: single refined element) ---
-  const orbGeo = new THREE.IcosahedronGeometry(0.8, 12);
-  const orbMat = new THREE.MeshPhysicalMaterial({
-    color: 0x0071e3,
-    metalness: 0.2,
-    roughness: 0.1,
-    clearcoat: 1,
-    clearcoatRoughness: 0.1,
-    transmission: 0.3,
-    thickness: 0.5,
-    ior: 1.33,
-  });
-  const orb = new THREE.Mesh(orbGeo, orbMat);
-  scene.add(orb);
+  // --- Central element (varies by scene) ---
+  const centralMeshes = [];
+  if (options.centralElement) {
+    const { geometry, material, count = 1, positionFn } = options.centralElement;
+    for (let i = 0; i < count; i++) {
+      const mesh = new THREE.Mesh(geometry, material);
+      if (positionFn) positionFn(mesh, i);
+      scene.add(mesh);
+      centralMeshes.push(mesh);
+    }
+  }
 
-  // --- Orbiting rings (subtle depth) ---
+  // --- Orbiting rings ---
   const rings = [];
-  for (let i = 0; i < 3; i++) {
-    const ringGeo = new THREE.RingGeometry(1.5 + i * 0.4, 1.55 + i * 0.4, 64);
-    const ringMat = new THREE.MeshBasicMaterial({
-      color: 0x0071e3,
-      transparent: true,
-      opacity: 0.08 - i * 0.02,
-      side: THREE.DoubleSide,
-      depthWrite: false,
-    });
-    const ring = new THREE.Mesh(ringGeo, ringMat);
-    ring.rotation.x = Math.PI / 2 + (i % 2) * 0.3;
-    ring.rotation.z = (i * Math.PI) / 4;
-    ring.userData = { speed: 0.0005 + i * 0.0003, axis: i % 2 === 0 ? 'x' : 'z' };
-    rings.push(ring);
-    scene.add(ring);
+  if (options.rings) {
+    for (let i = 0; i < options.rings.count; i++) {
+      const ringGeo = new THREE.RingGeometry(
+        options.rings.innerRadius + i * options.rings.thickness,
+        options.rings.innerRadius + options.rings.thickness + i * options.rings.thickness,
+        64
+      );
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: options.rings.color || 0x0071e3,
+        transparent: true,
+        opacity: (options.rings.opacity || 0.08) - i * 0.02,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+      });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = Math.PI / 2 + (i % 2) * 0.3;
+      ring.rotation.z = (i * Math.PI) / 4;
+      ring.userData = { speed: 0.0005 + i * 0.0003, axis: i % 2 === 0 ? 'x' : 'z' };
+      rings.push(ring);
+      scene.add(ring);
+    }
   }
 
-  // --- Subtle ambient spheres ---
-  const sphereMat = new THREE.MeshPhysicalMaterial({
-    color: 0x0a84ff,
-    metalness: 0.1,
-    roughness: 0.3,
-    transparent: true,
-    opacity: 0.15,
-  });
+  // --- Ambient spheres ---
   const ambientSpheres = [];
-  for (let i = 0; i < 8; i++) {
-    const s = new THREE.Mesh(new THREE.SphereGeometry(0.15 + Math.random() * 0.25, 16, 16), sphereMat);
-    const angle = Math.random() * Math.PI * 2;
-    const rad = 2.5 + Math.random() * 2;
-    s.position.set(Math.cos(angle) * rad, (Math.random() - 0.5) * 2, Math.sin(angle) * rad);
-    s.userData = { vx: (Math.random() - 0.5) * 0.002, vy: (Math.random() - 0.5) * 0.003, vz: (Math.random() - 0.5) * 0.002 };
-    ambientSpheres.push(s);
-    scene.add(s);
+  if (options.ambientSpheres) {
+    const sphereMat = new THREE.MeshPhysicalMaterial({
+      color: options.ambientSpheres.color || 0x0a84ff,
+      metalness: 0.1,
+      roughness: 0.3,
+      transparent: true,
+      opacity: 0.15,
+    });
+    for (let i = 0; i < options.ambientSpheres.count; i++) {
+      const s = new THREE.Mesh(
+        new THREE.SphereGeometry(0.15 + Math.random() * 0.25, 16, 16),
+        sphereMat
+      );
+      const angle = Math.random() * Math.PI * 2;
+      const rad = 2.5 + Math.random() * 2;
+      s.position.set(Math.cos(angle) * rad, (Math.random() - 0.5) * 2, Math.sin(angle) * rad);
+      s.userData = { vx: (Math.random() - 0.5) * 0.002, vy: (Math.random() - 0.5) * 0.003, vz: (Math.random() - 0.5) * 0.002 };
+      ambientSpheres.push(s);
+      scene.add(s);
+    }
   }
 
-  camera.position.z = 5.5;
+  camera.position.z = options.cameraZ || 5.5;
 
   // --- Mouse interaction (subtle parallax) ---
   const mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
@@ -162,18 +169,20 @@ function initHeroScene() {
     }
     particles.geometry.attributes.position.needsUpdate = true;
 
-    // Orb: gentle floating rotation
-    orb.rotation.x += 0.0015;
-    orb.rotation.y += 0.0025;
-    orb.position.y = Math.sin(frame * 0.003) * 0.15;
+    // Central elements
+    centralMeshes.forEach((mesh, i) => {
+      mesh.rotation.x += 0.001 + i * 0.0005;
+      mesh.rotation.y += 0.002 + i * 0.0003;
+      mesh.position.y = Math.sin(frame * 0.003 + i) * 0.15;
+    });
 
-    // Rings: slow rotation
+    // Rings
     rings.forEach((ring) => {
       if (ring.userData.axis === 'x') ring.rotation.x += ring.userData.speed;
       else ring.rotation.z += ring.userData.speed;
     });
 
-    // Ambient spheres: slow drift
+    // Ambient spheres
     ambientSpheres.forEach((s) => {
       s.position.x += s.userData.vx;
       s.position.y += s.userData.vy;
@@ -196,83 +205,144 @@ function initHeroScene() {
   animate();
 
   // Mark canvas as ready for CSS transition
-  heroCanvas.classList.add('hero__canvas--ready');
+  canvas.classList.add('hero__canvas--ready', 'hero__media-canvas--ready', 'promo__media-canvas--ready');
 
   // --- Resize ---
   window.addEventListener('resize', () => {
-    const w = heroCanvas.clientWidth;
-    const h = heroCanvas.clientHeight;
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     renderer.setSize(w, h);
   });
+
+  return { scene, camera, renderer };
 }
 
 /* ======================
-   About Visual Scene
+   Initialize All Scenes
    ====================== */
-function initAboutScene() {
-  const aboutCanvas = document.getElementById('aboutCanvas');
-  if (!aboutCanvas || !hasWebGL() || prefersReducedMotion()) return;
+function initAllScenes() {
+  // Hero
+  createScene('heroCanvas', 'heroFallback', '.hero__content', {
+    particleCount: 600,
+    particleColor: 0x0071e3,
+    radiusMin: 2,
+    radiusMax: 6,
+    centralElement: {
+      geometry: new THREE.IcosahedronGeometry(0.8, 12),
+      material: new THREE.MeshPhysicalMaterial({
+        color: 0x0071e3,
+        metalness: 0.2,
+        roughness: 0.1,
+        clearcoat: 1,
+        clearcoatRoughness: 0.1,
+        transmission: 0.3,
+        thickness: 0.5,
+        ior: 1.33,
+      }),
+      count: 1,
+    },
+    rings: { count: 3, innerRadius: 1.5, thickness: 0.4, color: 0x0071e3, opacity: 0.08 },
+    ambientSpheres: { count: 8, color: 0x0a84ff },
+    cameraZ: 5.5,
+  });
 
-  const canvasRect = aboutCanvas.getBoundingClientRect();
+  // Promo 1 (Joki Tugas) - blue theme
+  createScene('promo1Canvas', 'promo1Fallback', '.promo__content', {
+    particleCount: 300,
+    particleColor: 0x0071e3,
+    radiusMin: 1.5,
+    radiusMax: 3,
+    centralElement: {
+      geometry: new THREE.BoxGeometry(1, 1, 1),
+      material: new THREE.MeshPhysicalMaterial({
+        color: 0x0071e3,
+        metalness: 0.15,
+        roughness: 0.25,
+        clearcoat: 0.5,
+        clearcoatRoughness: 0.2,
+      }),
+      count: 1,
+    },
+    rings: { count: 2, innerRadius: 1.3, thickness: 0.3, color: 0x0071e3, opacity: 0.06 },
+    ambientSpheres: { count: 4, color: 0x0a84ff },
+    cameraZ: 4.5,
+  });
 
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(45, canvasRect.width / canvasRect.height, 0.1, 100);
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setSize(canvasRect.width, canvasRect.height);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.domElement.style.display = 'block';
-  aboutCanvas.appendChild(renderer.domElement);
+  // Promo 2 (Website) - purple theme
+  createScene('promo2Canvas', 'promo2Fallback', '.promo__content', {
+    particleCount: 300,
+    particleColor: 0x8b5cf6,
+    radiusMin: 1.5,
+    radiusMax: 3,
+    centralElement: {
+      geometry: new THREE.ConeGeometry(0.6, 1.2, 8),
+      material: new THREE.MeshPhysicalMaterial({
+        color: 0x8b5cf6,
+        metalness: 0.15,
+        roughness: 0.25,
+        clearcoat: 0.5,
+        clearcoatRoughness: 0.2,
+      }),
+      count: 1,
+    },
+    rings: { count: 2, innerRadius: 1.3, thickness: 0.3, color: 0x8b5cf6, opacity: 0.06 },
+    ambientSpheres: { count: 4, color: 0xa78bfa },
+    cameraZ: 4.5,
+  });
 
-  // Simple geometric composition - Apple style
-  const group = new THREE.Group();
-  scene.add(group);
+  // Promo 3 (AI) - green theme
+  createScene('promo3Canvas', 'promo3Fallback', '.promo__content', {
+    particleCount: 300,
+    particleColor: 0x10b981,
+    radiusMin: 1.5,
+    radiusMax: 3,
+    centralElement: {
+      geometry: new THREE.TorusGeometry(0.6, 0.2, 16, 32),
+      material: new THREE.MeshPhysicalMaterial({
+        color: 0x10b981,
+        metalness: 0.15,
+        roughness: 0.25,
+        clearcoat: 0.5,
+        clearcoatRoughness: 0.2,
+      }),
+      count: 1,
+    },
+    rings: { count: 2, innerRadius: 1.3, thickness: 0.3, color: 0x10b981, opacity: 0.06 },
+    ambientSpheres: { count: 4, color: 0x34d399 },
+    cameraZ: 4.5,
+  });
 
-  const shapes = [
-    { geo: new THREE.BoxGeometry(1, 1, 1), pos: [-1.5, 0.5, 0], rot: [0.3, 0.5, 0] },
-    { geo: new THREE.ConeGeometry(0.6, 1.2, 8), pos: [1.5, 0.3, 0], rot: [0, 0, 0] },
-    { geo: new THREE.CylinderGeometry(0.5, 0.5, 1, 16), pos: [0, -1, 0], rot: [0.5, 0, 0.3] },
-    { geo: new THREE.TorusGeometry(0.5, 0.15, 16, 32), pos: [-1.2, -0.8, 0.8], rot: [0, 0.7, 0] },
+  // Portfolio items (4 canvases)
+  const portfolioConfigs = [
+    { id: 'portfolio1Canvas', color: 0x0071e3, geometry: new THREE.BoxGeometry(1, 1, 1) },
+    { id: 'portfolio2Canvas', color: 0x8b5cf6, geometry: new THREE.ConeGeometry(0.6, 1.2, 8) },
+    { id: 'portfolio3Canvas', color: 0x10b981, geometry: new THREE.CylinderGeometry(0.5, 0.5, 1, 16) },
+    { id: 'portfolio4Canvas', color: 0xf59e0b, geometry: new THREE.TorusGeometry(0.6, 0.2, 16, 32) },
   ];
 
-  const shapeMat = new THREE.MeshPhysicalMaterial({
-    color: 0x0071e3,
-    metalness: 0.15,
-    roughness: 0.25,
-    clearcoat: 0.5,
-    clearcoatRoughness: 0.2,
-  });
-
-  const meshes = shapes.map(({ geo, pos, rot }) => {
-    const m = new THREE.Mesh(geo, shapeMat);
-    m.position.set(...pos);
-    m.rotation.set(...rot);
-    m.userData = { rotSpeed: [(Math.random() - 0.5) * 0.002, (Math.random() - 0.5) * 0.003, (Math.random() - 0.5) * 0.001] };
-    group.add(m);
-    return m;
-  });
-
-  camera.position.z = 4;
-
-  function animate() {
-    requestAnimationFrame(animate);
-    meshes.forEach((m) => {
-      m.rotation.x += m.userData.rotSpeed[0];
-      m.rotation.y += m.userData.rotSpeed[1];
-      m.rotation.z += m.userData.rotSpeed[2];
+  portfolioConfigs.forEach((cfg, i) => {
+    createScene(cfg.id, null, '.portfolio-item__content', {
+      particleCount: 200,
+      particleColor: cfg.color,
+      radiusMin: 1,
+      radiusMax: 2.5,
+      centralElement: {
+        geometry: cfg.geometry,
+        material: new THREE.MeshPhysicalMaterial({
+          color: cfg.color,
+          metalness: 0.15,
+          roughness: 0.25,
+          clearcoat: 0.5,
+          clearcoatRoughness: 0.2,
+        }),
+        count: 1,
+      },
+      rings: { count: 1, innerRadius: 1.2, thickness: 0.25, color: cfg.color, opacity: 0.05 },
+      ambientSpheres: { count: 3, color: cfg.color },
+      cameraZ: 4,
     });
-    group.rotation.y += 0.0008;
-    renderer.render(scene, camera);
-  }
-  animate();
-
-  window.addEventListener('resize', () => {
-    const w = aboutCanvas.clientWidth;
-    const h = aboutCanvas.clientHeight;
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    renderer.setSize(w, h);
   });
 }
 
@@ -339,6 +409,5 @@ function initUI() {
 }
 
 // --- Initialize ---
-initHeroScene();
-initAboutScene();
+initAllScenes();
 initUI();
